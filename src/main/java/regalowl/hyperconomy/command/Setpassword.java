@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import regalowl.hyperconomy.HyperConomy;
 
-
 public class Setpassword extends BaseCommand implements HyperCommand {
 
 	

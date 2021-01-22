@@ -25,7 +25,6 @@ import regalowl.hyperconomy.command.Hcpay;
 import regalowl.hyperconomy.command.Hcset;
 import regalowl.hyperconomy.command.Hctest;
 import regalowl.hyperconomy.command.Hctop;
-import regalowl.hyperconomy.command.Hcweb;
 import regalowl.hyperconomy.command.Hs;
 import regalowl.hyperconomy.command.Hv;
 import regalowl.hyperconomy.command.Hyperlog;
@@ -80,7 +79,6 @@ import regalowl.hyperconomy.util.LibraryManager;
 import regalowl.hyperconomy.util.Log;
 import regalowl.hyperconomy.util.UpdateChecker;
 import regalowl.hyperconomy.util.UpdateYML;
-import regalowl.hyperconomy.webpage.HyperConomy_Web;
 import regalowl.simpledatalib.SimpleDataLib;
 import regalowl.simpledatalib.event.SDLEvent;
 import regalowl.simpledatalib.event.SDLEventListener;
@@ -113,7 +111,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	private transient FileTools ft;
 	private transient FileConfiguration hConfig;
 	private transient DebugMode dMode;
-	private transient HyperConomy_Web hcweb;
 	private transient RemoteGUIServer rgs;
 	private transient TimeEffectsManager tem;
 	private transient HItemStack blankStack;
@@ -156,7 +153,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 				isign = new InfoSignHandler(this);
 				fsh = mc.getFrameShopHandler();
 				tem = new TimeEffectsManager(this);
-				hcweb = new HyperConomy_Web(this);
 				registerCommands();
 				loaded.set(true);;
 				hl.setLoadLock(false);
@@ -257,7 +253,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		loadingStarted.set(false);
 		loaded.set(false);
 		if (!protect) mc.unregisterAllListeners();
-		if (hcweb != null) hcweb.disable();
 		if (itdi != null) itdi.unloadDisplays();
 		if (hist != null) hist.stopHistoryLog();
 		if (tem != null) tem.disable();
@@ -294,7 +289,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 		mc.registerCommand("hcset", new Hcset(this));
 		mc.registerCommand("hctest", new Hctest(this));
 		mc.registerCommand("hctop", new Hctop(this));
-		mc.registerCommand("hcweb", new Hcweb(this));
 		mc.registerCommand("heldsell", new Hs(this));
 		mc.registerCommand("heldvalue", new Hv(this));
 		mc.registerCommand("hyperlog", new Hyperlog(this));
@@ -421,9 +415,6 @@ public class HyperConomy implements HyperEventListener, SDLEventListener {
 	}
 	public MineCraftConnector getMC() {
 		return mc;
-	}
-	public HyperConomy_Web getHyperConomyWeb() {
-		return hcweb;
 	}
 	public RemoteGUIServer getRemoteGUIServer() {
 		return rgs;

@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -69,7 +68,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	private HyperConomy hc;
 	private BukkitListener bl;
 	private BukkitCommon common;
-	private NBTTools nbt;
+//	private NBTTools nbt;
 	
 	private boolean vaultInstalled;
 	private boolean useExternalEconomy;
@@ -81,7 +80,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 		this.hc = new HyperConomy(this);
 		this.bl = new BukkitListener(this);
 		this.common = new BukkitCommon(hc);
-		this.nbt = new NBTTools();
+//		this.nbt = new NBTTools();
 		useExternalEconomy = false;	
 	}
 	
@@ -137,8 +136,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	
 	@Override
 	public void checkExternalEconomyRegistration() {
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		vaultInstalled = (vault != null & vault instanceof Vault) ? true:false;
+		vaultInstalled = Bukkit.getPluginManager().getPlugin("Vault") != null;
 		useExternalEconomy = hc.gYH().getFileConfiguration("config").getBoolean("economy-plugin.use-external");
 		if (!vaultInstalled) useExternalEconomy = false;
 		if (!useExternalEconomy && vaultInstalled && hc.gYH().gFC("config").getBoolean("economy-plugin.hook-internal-economy-into-vault")) {
@@ -641,7 +639,7 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public boolean canHoldChestShopSign(HLocation l) {
 		Block b = common.getBlock(l);
 		Material m = b.getType();
-		if (m == Material.ICE || m == Material.LEAVES || m == Material.SAND || m == Material.GRAVEL || m == Material.SIGN || m == Material.SIGN_POST || m == Material.TNT) {
+		if (m == Material.ICE || isLeaves(m) || m == Material.SAND || m == Material.GRAVEL || isSign(m) || isWallSign(m) || m == Material.TNT) {
 			return false;
 		}
 		return true;
@@ -664,9 +662,9 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public HSign getSign(HLocation location) {
 		if (location == null) return null;
 		Block b = common.getLocation(location).getBlock();
-		if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+		if (b != null && (isSign(b.getType()) || isWallSign(b.getType()))) {
 			Sign s = (Sign) b.getState();
-			boolean isWallSign = (b.getType().equals(Material.WALL_SIGN)) ? true:false;
+			boolean isWallSign = (isWallSign(b.getType())) ? true:false;
 			ArrayList<String> lines = new ArrayList<String>();
 			for (String l:s.getLines()) {
 				lines.add(l);
@@ -899,13 +897,43 @@ public class BukkitConnector extends JavaPlugin implements MineCraftConnector, L
 	public String getMinecraftItemName(HItemStack stack) {
 		ItemStack bukkitStack = common.getItemStack(stack);
 		if (bukkitStack == null) return null;
-		return nbt.getName(bukkitStack);
+		return bukkitStack.getItemMeta().getDisplayName();
+//		return nbt.getName(bukkitStack);
 	}
 
 
 
 
+	protected static boolean isWallSign(Material material) {
+		return material.equals(Material.ACACIA_WALL_SIGN)
+				|| material.equals(Material.BIRCH_WALL_SIGN)
+				|| material.equals(Material.CRIMSON_WALL_SIGN)
+				|| material.equals(Material.DARK_OAK_WALL_SIGN)
+				|| material.equals(Material.JUNGLE_WALL_SIGN)
+				|| material.equals(Material.OAK_WALL_SIGN)
+				|| material.equals(Material.SPRUCE_WALL_SIGN)
+				|| material.equals(Material.WARPED_WALL_SIGN);
+	}
 
+	protected static boolean isSign(Material material) {
+		return material.equals(Material.ACACIA_SIGN)
+				|| material.equals(Material.BIRCH_SIGN)
+				|| material.equals(Material.CRIMSON_SIGN)
+				|| material.equals(Material.DARK_OAK_SIGN)
+				|| material.equals(Material.JUNGLE_SIGN)
+				|| material.equals(Material.OAK_SIGN)
+				|| material.equals(Material.SPRUCE_SIGN)
+				|| material.equals(Material.WARPED_SIGN);
+	}
+
+	protected static boolean isLeaves(Material material) {
+		return material.equals(Material.ACACIA_LEAVES)
+				|| material.equals(Material.BIRCH_LEAVES)
+				|| material.equals(Material.DARK_OAK_LEAVES)
+				|| material.equals(Material.JUNGLE_LEAVES)
+				|| material.equals(Material.OAK_LEAVES)
+				|| material.equals(Material.SPRUCE_LEAVES);
+	}
 
 	
 }

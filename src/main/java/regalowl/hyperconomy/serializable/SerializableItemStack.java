@@ -49,8 +49,8 @@ public class SerializableItemStack extends SerializableObject implements Seriali
         		itemMeta = new SerializableLeatherArmorMeta(item.getItemMeta());
         	} else if (im instanceof PotionMeta) {
         		itemMeta = new SerializablePotionMeta(item.getItemMeta());
-        	} else if (im instanceof SkullMeta) {
-        		itemMeta = new SerializableSkullMeta(item.getItemMeta());
+//        	} else if (im instanceof SkullMeta) {
+//        		itemMeta = new SerializableSkullMeta(item.getItemMeta());
         	} else if (im instanceof MapMeta) {
         		itemMeta = new SerializableMapMeta(item.getItemMeta());
         	} else {

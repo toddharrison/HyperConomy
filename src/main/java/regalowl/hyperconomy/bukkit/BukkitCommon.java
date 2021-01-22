@@ -123,7 +123,7 @@ public class BukkitCommon {
 
 	protected boolean isTransactionSign(HLocation l) {
 		Block b = getBlock(l);
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+		if (b != null && isSign(b.getType()) || b != null && isWallSign(b.getType())) {
 			Sign s = (Sign) b.getState();
 			String line3 = ChatColor.stripColor(s.getLine(2)).trim();
 			if (line3.equalsIgnoreCase("[sell:buy]") || line3.equalsIgnoreCase("[sell]") || line3.equalsIgnoreCase("[buy]")) {
@@ -135,7 +135,7 @@ public class BukkitCommon {
 
 	protected boolean isInfoSign(HLocation l) {
 		Block b = getBlock(l);
-		if (b != null && b.getType().equals(Material.SIGN_POST) || b != null && b.getType().equals(Material.WALL_SIGN)) {
+		if (b != null && isSign(b.getType()) || b != null && isWallSign(b.getType())) {
 			Sign s = (Sign) b.getState();
 			String type = ChatColor.stripColor(s.getLine(2)).trim().replace(":", "").replace(" ", "");
 			if (SignType.isSignType(type)) return true;
@@ -181,7 +181,7 @@ public class BukkitCommon {
 		if (b == null) return null;
 		for (BlockFace cface : planeFaces) {
 			Block block = b.getRelative(cface);
-			if (block.getType().equals(Material.WALL_SIGN)) {
+			if (isWallSign(block.getType())) {
 				org.bukkit.material.Sign sign = (org.bukkit.material.Sign) block.getState().getData();
 				BlockFace attachedface = sign.getFacing();
 				if (block.getRelative(attachedface.getOppositeFace()).equals(b)) {
@@ -197,7 +197,29 @@ public class BukkitCommon {
 		}
 		return null;
 	}
-	
+
+	protected static boolean isWallSign(Material material) {
+		return material.equals(Material.ACACIA_WALL_SIGN)
+				|| material.equals(Material.BIRCH_WALL_SIGN)
+				|| material.equals(Material.CRIMSON_WALL_SIGN)
+				|| material.equals(Material.DARK_OAK_WALL_SIGN)
+				|| material.equals(Material.JUNGLE_WALL_SIGN)
+				|| material.equals(Material.OAK_WALL_SIGN)
+				|| material.equals(Material.SPRUCE_WALL_SIGN)
+				|| material.equals(Material.WARPED_WALL_SIGN);
+	}
+
+	protected static boolean isSign(Material material) {
+		return material.equals(Material.ACACIA_SIGN)
+				|| material.equals(Material.BIRCH_SIGN)
+				|| material.equals(Material.CRIMSON_SIGN)
+				|| material.equals(Material.DARK_OAK_SIGN)
+				|| material.equals(Material.JUNGLE_SIGN)
+				|| material.equals(Material.OAK_SIGN)
+				|| material.equals(Material.SPRUCE_SIGN)
+				|| material.equals(Material.WARPED_SIGN);
+	}
+
 	protected boolean isPartOfChestShop(HLocation l) {
 		if (isChestShopChest(l)) return true;
 		if (isChestShopSign(l)) return true;

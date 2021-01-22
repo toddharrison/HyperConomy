@@ -1,0 +1,87 @@
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+group 'regalowl.hyperconomy'
+version '0.975.8-SNAPSHOT'
+
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+repositories() {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+//    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+//    maven { url 'http://ci.articdive.cf/plugin/repository/everything/' }
+    maven { url 'https://maven.playpro.com/' }
+    maven { url 'https://jitpack.io/' }
+    maven { url 'http://nexus.hc.to/content/repositories/pub_releases' }
+//    flatDir {
+//        dirs 'libs'
+//    }
+}
+
+dependencies {
+    implementation platform('org.jetbrains.kotlin:kotlin-bom')
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib'
+    compileOnly 'org.jetbrains.kotlin:kotlin-reflect'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    compileOnly ('com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT') {
+        exclude module: 'junit'
+    }
+    compileOnly('com.destroystokyo.paper:paper:1.16.4-R0.1-SNAPSHOT') {
+        exclude module: 'brigadier'
+        exclude module: 'cleaner'
+        exclude module: 'minecraft-server'
+    }
+    testImplementation ('com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT') {
+        exclude module: 'junit'
+    }
+    testImplementation('com.destroystokyo.paper:paper:1.16.4-R0.1-SNAPSHOT') {
+        exclude module: 'brigadier'
+        exclude module: 'cleaner'
+        exclude module: 'minecraft-server'
+    }
+
+//    compileOnly 'net.milkbowl.vault:Vault:1.7.3'
+    compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
+
+    compileOnly 'org.xerial:sqlite-jdbc:3.34.0'
+    compileOnly 'mysql:mysql-connector-java:8.0.23'
+    implementation 'com.opencsv:opencsv:5.3'
+    compileOnly 'javax.xml.bind:jaxb-api:2.3.1'
+    compileOnly 'org.yaml:snakeyaml:1.27'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+processResources {
+    filesMatching("**/*.yml") {
+        expand( project.properties )
+    }
+}
+
+task buildRelease(dependsOn: [build, shadowJar]) {
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    minimize()
+    // minimize {
+    //     exclude(dependency("org.jetbrains.kotlin:.*"))
+    // }
+    relocate 'com.opencsv', 'com.briarcraft.shadow.opencsv'
+//    relocate 'net.querz', 'com.briarcraft.shadow.querz'
+}
+
+test {
+    useJUnitPlatform()
+}

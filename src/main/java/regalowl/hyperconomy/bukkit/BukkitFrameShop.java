@@ -51,7 +51,7 @@ public class BukkitFrameShop implements FrameShop, HyperEventListener {
 		this.s = s;
 		this.bc = (BukkitConnector)hc.getMC();
 		MapView mapView = Bukkit.getServer().createMap(bc.getBukkitCommon().getLocation(l).getWorld());
-		mapId = mapView.getId();
+		mapId = (short)mapView.getId();
 		String shop = "";
 		if (s != null) {
 			shop = s.getName();

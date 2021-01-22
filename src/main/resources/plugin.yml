@@ -1,10 +1,14 @@
-name: HyperConomy
+
+name: ${project.name}
+version: ${project.version}
+author: Todd Harrison
 main: regalowl.hyperconomy.bukkit.BukkitConnector
-version: 0.975.8
-author: RegalOwl
-website: http://dev.bukkit.org/server-mods/hyperconomy/
+api-version: 1.16
+#prefix: RTW
+
+depend: [Kotlin]
 softdepend: [HeroStronghold, Buycraft, Essentials, Vault]
-loadbefore: []
+
 commands:
    buy:
       description: Buys items.
@@ -235,10 +239,6 @@ commands:
       permission: hyperconomy.bank
       permission-message: You do not have permission.
       aliases: [bank]      
-   hcweb:
-      description: Manages the web page.
-      permission: hyperconomy.admin
-      permission-message: You do not have permission.
    timeeffect:
       description: Adds and removes TimeEffects from HyperConomy.
       permission: hyperconomy.admin
